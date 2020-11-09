@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextRefreshedEvent;
 
 import javax.annotation.PostConstruct;
 
@@ -20,7 +22,7 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @EnableConfigurationProperties(MqttProperties.class)
-public class MqttTemplateAutoConfiguration {
+public class MqttTemplateAutoConfiguration implements ApplicationListener<ContextRefreshedEvent> {
     private final Logger log = LoggerFactory.getLogger(MqttTemplateAutoConfiguration.class);
 
     @Autowired
@@ -69,18 +71,28 @@ public class MqttTemplateAutoConfiguration {
     }
 
 
+    /**
+     * Handle an application event.
+     *
+     * @param event the event to respond to
+     */
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        connectionMqttBroker();
+    }
 
-    @ConditionalOnBean(MqttTemplate.class)
-    @Bean
-    public void connectionMqttBroker() {
 
-        if(log.isInfoEnabled()) {
+    private void connectionMqttBroker() {
+        if (log.isInfoEnabled()) {
             log.info("Connecting to mqtt broker ...【host: {}】【clientId: {}】【username: {}】",
                     config.getHost(), config.getClientId(), config.getUsername());
         }
 
         MqttConnectOptions options = config.getApplicationContext().getBean(MqttConnectOptions.class);
         MqttTemplate mqttTemplate = config.getApplicationContext().getBean(MqttTemplate.class);
+        if (options == null || mqttTemplate == null) {
+            return;
+        }
         try {
             mqttTemplate.connectionMqttBroker(options);
         } catch (Exception e) {
@@ -90,6 +102,4 @@ public class MqttTemplateAutoConfiguration {
             System.exit(1);
         }
     }
-
-
 }
