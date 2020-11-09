@@ -96,7 +96,7 @@ public class MqttTemplateAutoConfiguration implements ApplicationListener<Contex
             mqttTemplate.connectionMqttBroker(options);
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
-                log.error("【Connection to mqtt broker failed: {}】", e.getMessage(), e);
+                log.error("Connection to mqtt broker failed: {}", e.getMessage(), e);
             }
             System.exit(1);
         }
