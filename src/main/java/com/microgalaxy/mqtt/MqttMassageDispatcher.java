@@ -88,9 +88,16 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
             log.info("Receive a message.【topic: {}】【message: {}】【detail: {}】",
                     topic, new String(mqttMessage.getPayload()), gson.toJson(mqttMessage));
         }
+
+        InvokeMethodMap invokeMethodMap = mqttMsgHandleMap.get(topic);
+        if (invokeMethodMap == null) {
+            if (log.isErrorEnabled()) {
+                log.error("No found MqttMassageMapping.【topic:{}】", topic);
+            }
+            return;
+        }
+        Object[] args = getInvokeArgs(invokeMethodMap, topic, mqttMessage);
         try {
-            InvokeMethodMap invokeMethodMap = mqttMsgHandleMap.get(topic);
-            Object[] args = getInvokeArgs(invokeMethodMap, topic, mqttMessage);
             invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass(), args);
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
@@ -101,7 +108,8 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
     }
 
     @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {}
+    public void deliveryComplete(IMqttDeliveryToken token) {
+    }
 
 
     private Map<String, InvokeMethodMap> initMqttMsgHandleMap() {
