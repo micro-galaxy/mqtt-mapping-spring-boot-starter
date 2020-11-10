@@ -2,21 +2,17 @@
 
 make mqtt message processing as simple as spring processing http request mapping
 
-#### 1，download mqtt-mapping-spring-boot-starter source and install
-````maven clean````
 
-````maven install````
-
-#### 2,add maven dependency
+#### 1,add maven dependency
 ```` 
 <dependency>
-    <groupId>com.microgalaxy.starter</groupId>
-    <artifactId>mqtt-mapping-spring-boot-starter</artifactId>
-    <version>1.0</version>
+  <groupId>com.microgalaxy.starter</groupId>
+  <artifactId>mqtt-mapping-spring-boot-starter</artifactId>
+  <version>1.0</version>
 </dependency>
 ````
 
-#### 3,springBoot configuration file
+#### 2,springBoot configuration file
 ````
 spring:
  mqtt:
@@ -30,7 +26,7 @@ spring:
   keepAliveInterval: 60
 ````
 
-#### 4,use in projects
+#### 3,use in projects
 ````
     /**
      * @author Microgalaxy
