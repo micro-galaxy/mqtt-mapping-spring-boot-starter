@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.ContextRefreshedEvent;
 
 import javax.annotation.PostConstruct;
 
@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @EnableConfigurationProperties(MqttProperties.class)
-public class MqttTemplateAutoConfiguration implements ApplicationListener<ContextRefreshedEvent> {
+public class MqttTemplateAutoConfiguration implements ApplicationListener<WebServerInitializedEvent> {
     private final Logger log = LoggerFactory.getLogger(MqttTemplateAutoConfiguration.class);
 
     @Autowired
@@ -30,7 +30,6 @@ public class MqttTemplateAutoConfiguration implements ApplicationListener<Contex
     private MqttMassageDispatcher dispatcher;
 
     @PostConstruct
-    @ConditionalOnMissingBean(MqttTemplate.class)
     public void initDispatcher() {
         dispatcher = new MqttMassageDispatcher(config);
         dispatcher.initMqttHandleMap();
@@ -76,7 +75,7 @@ public class MqttTemplateAutoConfiguration implements ApplicationListener<Contex
      * @param event the event to respond to
      */
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(WebServerInitializedEvent event) {
         connectionMqttBroker();
     }
 
