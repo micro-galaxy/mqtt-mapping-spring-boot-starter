@@ -6,11 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.context.WebServerInitializedEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 
 import javax.annotation.PostConstruct;
 
@@ -21,24 +22,23 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @EnableConfigurationProperties(MqttProperties.class)
-public class MqttTemplateAutoConfiguration implements ApplicationListener<WebServerInitializedEvent> {
+class MqttTemplateAutoConfiguration {
     private final Logger log = LoggerFactory.getLogger(MqttTemplateAutoConfiguration.class);
 
     @Autowired
-    MqttProperties config;
+    private MqttProperties config;
 
     private MqttMassageDispatcher dispatcher;
 
     @PostConstruct
-    public void initDispatcher() {
+    protected void initDispatcher() {
         dispatcher = new MqttMassageDispatcher(config);
         dispatcher.initMqttHandleMap();
     }
 
-    @PostConstruct
     @ConditionalOnMissingBean
     @Bean
-    public MqttConnectOptions mqttConnectOptions() {
+    protected MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(config.getUsername());
         options.setPassword(config.getPassword().toCharArray());
@@ -53,9 +53,10 @@ public class MqttTemplateAutoConfiguration implements ApplicationListener<WebSer
         return options;
     }
 
+    @DependsOn("mqttConnectOptions")
     @ConditionalOnMissingBean
     @Bean
-    public MqttTemplate mqttTemplate() {
+    protected MqttTemplate mqttTemplate() {
         MqttTemplate mqttTemplate = new MqttTemplate(config, dispatcher);
         try {
             mqttTemplate.initMqttClient();
@@ -68,19 +69,8 @@ public class MqttTemplateAutoConfiguration implements ApplicationListener<WebSer
         return mqttTemplate;
     }
 
-
-    /**
-     * Handle an application event.
-     *
-     * @param event the event to respond to
-     */
-    @Override
-    public void onApplicationEvent(WebServerInitializedEvent event) {
-        connectionMqttBroker();
-    }
-
-
-    private void connectionMqttBroker() {
+    @EventListener(ApplicationStartedEvent.class)
+    public void connectionMqttBroker() {
         if (log.isInfoEnabled()) {
             log.info("Connecting to mqtt broker ...【host: {}】【clientId: {}】【username: {}】",
                     config.getHost(), config.getClientId(), config.getUsername());
@@ -88,9 +78,6 @@ public class MqttTemplateAutoConfiguration implements ApplicationListener<WebSer
 
         MqttConnectOptions options = config.getApplicationContext().getBean(MqttConnectOptions.class);
         MqttTemplate mqttTemplate = config.getApplicationContext().getBean(MqttTemplate.class);
-        if (options == null || mqttTemplate == null) {
-            return;
-        }
         try {
             mqttTemplate.connectionMqttBroker(options);
         } catch (Exception e) {

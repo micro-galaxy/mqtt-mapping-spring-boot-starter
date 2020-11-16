@@ -194,6 +194,7 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
                 Class<? extends Annotation> aClass = annotation.annotationType();
                 if (clazz.contains(aClass)) {
                     argsSpace[i] = aClass;
+                    return;
                 }
             }
         });

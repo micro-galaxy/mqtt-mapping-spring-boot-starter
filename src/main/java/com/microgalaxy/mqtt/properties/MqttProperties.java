@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContextAware;
 @ConditionalOnProperty(prefix = "spring.mqtt")
 @ConfigurationProperties(prefix = "spring.mqtt")
 public class MqttProperties implements ApplicationContextAware {
-    public static ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
     private String host;
     private String clientId;
