@@ -73,7 +73,7 @@ class MqttTemplateAutoConfiguration {
     public void connectionMqttBroker() {
         if (log.isInfoEnabled()) {
             log.info("Connecting to mqtt broker ...【host: {}】【clientId: {}】【username: {}】",
-                    config.getHost(), config.getClientId(), config.getUsername());
+                    "tcp://" + config.getDomain() + ":" + config.getPort(), config.getClientId(), config.getUsername());
         }
 
         MqttConnectOptions options = config.getApplicationContext().getBean(MqttConnectOptions.class);

@@ -121,9 +121,13 @@ public final class MqttTemplate {
 
 
     protected void initMqttClient() throws Exception {
-        MqttClient mqttClient = new MqttClient(config.getHost(), config.getClientId(), new MemoryPersistence());
+        MqttClient mqttClient = new MqttClient(getHost(config), config.getClientId(), new MemoryPersistence());
         mqttClient.setCallback(mqttMassageDispatcher);
         this.mqttClient = mqttClient;
+    }
+
+    private String getHost(MqttProperties config) {
+        return "tcp://" + config.getDomain() + ":" + config.getPort();
     }
 
     protected void connectionMqttBroker(MqttConnectOptions options) throws MqttException {

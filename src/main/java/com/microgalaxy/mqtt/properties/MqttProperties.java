@@ -16,7 +16,8 @@ import org.springframework.context.ApplicationContextAware;
 public class MqttProperties implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
-    private String host;
+    private String domain;
+    private String port;
     private String clientId;
     private String username;
     private String password;
@@ -25,13 +26,20 @@ public class MqttProperties implements ApplicationContextAware {
     private Boolean cleanSession;
     private Integer keepAliveInterval;
 
-
-    public String getHost() {
-        return host;
+    public String getDomain() {
+        return domain;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 
     public String getClientId() {
