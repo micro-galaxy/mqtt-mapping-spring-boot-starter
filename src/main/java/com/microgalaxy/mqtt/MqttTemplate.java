@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.microgalaxy.mqtt.utils.Assert;
 
+import java.util.Collection;
+
 
 /**
  * @author Microgalaxy
@@ -114,6 +116,26 @@ public final class MqttTemplate {
             if (log.isErrorEnabled()) {
                 log.error("Failed to subscribe to a topic from mqtt broker: {}【topic：{}】【qos：{}】",
                         e.getMessage(), topic, qos.qos(), e);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * subscribe to  topics from mqtt broker
+     *
+     * @param topics mqtt topics
+     * @param qos    Quality of Service, {@link MqttConstant.MqttQos}
+     * @return
+     */
+    public boolean subscribe(String[] topics, int[] qos) {
+        try {
+            mqttClient.subscribe(topics, qos);
+            return true;
+        } catch (MqttException e) {
+            if (log.isErrorEnabled()) {
+                log.error("Failed to subscribe to a topic from mqtt broker: {}【topic：{}】【qos：{}】",
+                        e.getMessage(), topics, qos, e);
             }
         }
         return false;
