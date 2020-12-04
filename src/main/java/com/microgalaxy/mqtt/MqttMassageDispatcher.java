@@ -119,7 +119,7 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
                 .getBeansWithAnnotation(MqttMassageController.class);
 
         handles.forEach((k, v) -> {
-            Class<?> handleClass = v.getClass();
+            Class<?> handleClass = v.getClass().getSuperclass();
             MqttMassageMapping rootMapping = AnnotationUtils.findAnnotation(handleClass, MqttMassageMapping.class);
             Method[] methods = handleClass.getDeclaredMethods();
 
@@ -195,7 +195,6 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
                 Class<? extends Annotation> aClass = annotation.annotationType();
                 if (clazz.contains(aClass)) {
                     argsSpace[i] = aClass;
-                    return;
                 }
             }
         });
