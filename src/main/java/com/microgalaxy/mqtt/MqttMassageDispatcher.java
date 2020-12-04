@@ -8,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.annotation.Annotation;
@@ -119,11 +120,11 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
 
         handles.forEach((k, v) -> {
             Class<?> handleClass = v.getClass();
-            MqttMassageMapping rootMapping = handleClass.getAnnotation(MqttMassageMapping.class);
+            MqttMassageMapping rootMapping = AnnotationUtils.findAnnotation(handleClass, MqttMassageMapping.class);
             Method[] methods = handleClass.getDeclaredMethods();
 
             IntStream.range(0, methods.length).forEach(i -> {
-                MqttMassageMapping methodMapping = methods[i].getAnnotation(MqttMassageMapping.class);
+                MqttMassageMapping methodMapping = AnnotationUtils.findAnnotation(methods[i], MqttMassageMapping.class);
                 if (ObjectUtils.isEmpty(methodMapping)) {
                     return;
                 }
@@ -166,8 +167,8 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
             Method[] methods = handleClass.getDeclaredMethods();
 
             IntStream.range(0, methods.length).forEach(i -> {
-                OnConnectComplete connectCompleteMapping = methods[i].getAnnotation(OnConnectComplete.class);
-                OnDisconnect disconnectMapping = methods[i].getAnnotation(OnDisconnect.class);
+                OnConnectComplete connectCompleteMapping = AnnotationUtils.findAnnotation(methods[i], OnConnectComplete.class);
+                OnDisconnect disconnectMapping = AnnotationUtils.findAnnotation(methods[i], OnDisconnect.class);
                 if (!ObjectUtils.isEmpty(connectCompleteMapping)) {
                     InvokeMethodMap invokeMethodMap = new InvokeMethodMap(v, methods[i], null);
                     connectCompleteEvent.add(invokeMethodMap);
