@@ -84,7 +84,7 @@ class MqttTemplateAutoConfiguration {
             if (log.isErrorEnabled()) {
                 log.error("Connection to mqtt broker failed: {}", e.getMessage(), e);
             }
-            System.exit(1);
+//            System.exit(1);
         }
     }
 }
