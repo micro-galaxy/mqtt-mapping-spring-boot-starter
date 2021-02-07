@@ -1,4 +1,4 @@
-package com.microgalaxy.mqtt.annotation;
+package github.microgalaxy.mqtt.annotation;
 
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;

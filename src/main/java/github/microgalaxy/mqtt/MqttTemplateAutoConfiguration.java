@@ -1,6 +1,6 @@
-package com.microgalaxy.mqtt;
+package github.microgalaxy.mqtt;
 
-import com.microgalaxy.mqtt.properties.MqttProperties;
+import github.microgalaxy.mqtt.properties.MqttProperties;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author Microgalaxy

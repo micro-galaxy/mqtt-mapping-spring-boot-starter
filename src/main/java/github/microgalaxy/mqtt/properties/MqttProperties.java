@@ -1,4 +1,4 @@
-package com.microgalaxy.mqtt.properties;
+package github.microgalaxy.mqtt.properties;
 
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

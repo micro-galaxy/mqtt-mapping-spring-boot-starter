@@ -1,4 +1,4 @@
-package com.microgalaxy.mqtt;
+package github.microgalaxy.mqtt;
 
 import java.lang.reflect.Method;
 

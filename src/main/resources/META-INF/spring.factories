@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.microgalaxy.mqtt.MqttTemplateAutoConfiguration
+github.microgalaxy.mqtt.MqttTemplateAutoConfiguration

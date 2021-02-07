@@ -1,5 +1,5 @@
 
-package com.microgalaxy.mqtt.utils;
+package github.microgalaxy.mqtt.utils;
 
 public abstract class Assert {
 

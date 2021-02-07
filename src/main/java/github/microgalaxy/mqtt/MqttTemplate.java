@@ -1,13 +1,11 @@
-package com.microgalaxy.mqtt;
+package github.microgalaxy.mqtt;
 
-import com.microgalaxy.mqtt.properties.MqttProperties;
+import github.microgalaxy.mqtt.properties.MqttProperties;
+import github.microgalaxy.mqtt.utils.Assert;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.microgalaxy.mqtt.utils.Assert;
-
-import java.util.Collection;
 
 
 /**

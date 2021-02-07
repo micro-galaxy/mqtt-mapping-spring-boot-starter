@@ -1,4 +1,4 @@
-package com.microgalaxy.mqtt.annotation;
+package github.microgalaxy.mqtt.annotation;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
