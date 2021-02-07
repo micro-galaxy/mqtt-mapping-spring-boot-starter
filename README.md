@@ -6,7 +6,7 @@ make mqtt message processing as simple as spring processing http request mapping
 #### 1,add maven dependency
 ```` 
 <dependency>
-  <groupId>com.microgalaxy.starter</groupId>
+  <groupId>github.micro-galaxy.starter</groupId>
   <artifactId>mqtt-mapping-spring-boot-starter</artifactId>
   <version>1.0</version>
 </dependency>
@@ -17,9 +17,9 @@ make mqtt message processing as simple as spring processing http request mapping
 spring:
  mqtt:
   host: tcp://localhost:1020
-  clientId: KL000000000000000003
+  clientId: SERVER000000000000001
   username: admin
-  password: public
+  password: admin
   connectionTimeout: 10
   automaticReconnect: true
   cleanSession: true
@@ -51,5 +51,12 @@ spring:
         public void iotMsg(@RequestTopic String topic, @RequestMassage MqttMessage msg) {
            System.out.println(new String( msg.getPayload()));
         }
+
+        @OnDisconnect
+        public void onDisconnect() {
+           //do something...
+        }
+
+
     }
 ````
