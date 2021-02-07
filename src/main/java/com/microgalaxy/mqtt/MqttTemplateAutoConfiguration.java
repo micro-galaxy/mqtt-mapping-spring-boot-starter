@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 
 import javax.annotation.PostConstruct;
 
@@ -30,10 +31,13 @@ class MqttTemplateAutoConfiguration {
 
     private MqttMassageDispatcher dispatcher;
 
-    @PostConstruct
-    protected void initDispatcher() {
+    @ConditionalOnMissingBean
+    @Bean
+    @Order(Integer.MIN_VALUE)
+    protected MqttMassageDispatcher initDispatcher() {
         dispatcher = new MqttMassageDispatcher(config);
         dispatcher.initMqttHandleMap();
+        return dispatcher;
     }
 
     @ConditionalOnMissingBean
