@@ -1,6 +1,7 @@
 package github.microgalaxy.mqtt;
 
 import github.microgalaxy.mqtt.properties.MqttProperties;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,7 @@ class MqttTemplateAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    @Order(Integer.MIN_VALUE)
-    protected MqttMassageDispatcher initDispatcher() {
+    protected MqttMassageDispatcher mqttMassageDispatcher() {
         dispatcher = new MqttMassageDispatcher(config);
         dispatcher.initMqttHandleMap();
         return dispatcher;
@@ -55,11 +55,10 @@ class MqttTemplateAutoConfiguration {
         return options;
     }
 
-    @DependsOn("mqttConnectOptions")
     @ConditionalOnMissingBean
     @Bean
     protected MqttTemplate mqttTemplate() {
-        MqttTemplate mqttTemplate = new MqttTemplate(config, dispatcher);
+        MqttTemplate mqttTemplate = new MqttTemplate(config);
         try {
             mqttTemplate.initMqttClient();
         } catch (Exception e) {
@@ -81,7 +80,7 @@ class MqttTemplateAutoConfiguration {
         MqttConnectOptions options = config.getApplicationContext().getBean(MqttConnectOptions.class);
         MqttTemplate mqttTemplate = config.getApplicationContext().getBean(MqttTemplate.class);
         try {
-            mqttTemplate.connectionMqttBroker(options);
+            mqttTemplate.connectionMqttBroker(options, dispatcher);
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Connection to mqtt broker failed: {}", e.getMessage(), e);

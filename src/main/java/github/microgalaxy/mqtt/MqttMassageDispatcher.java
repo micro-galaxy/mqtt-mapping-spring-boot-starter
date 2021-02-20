@@ -1,8 +1,8 @@
 package github.microgalaxy.mqtt;
 
 import com.google.gson.Gson;
-import github.microgalaxy.mqtt.properties.MqttProperties;
 import github.microgalaxy.mqtt.annotation.*;
+import github.microgalaxy.mqtt.properties.MqttProperties;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;

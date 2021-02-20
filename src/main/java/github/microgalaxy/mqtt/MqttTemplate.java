@@ -17,12 +17,10 @@ public final class MqttTemplate {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private MqttProperties config;
-    private MqttCallback mqttMassageDispatcher;
     private MqttClient mqttClient;
 
-    protected MqttTemplate(MqttProperties config, MqttCallback mqttMassageDispatcher) {
+    protected MqttTemplate(MqttProperties config) {
         this.config = config;
-        this.mqttMassageDispatcher = mqttMassageDispatcher;
     }
 
 
@@ -141,16 +139,15 @@ public final class MqttTemplate {
 
 
     protected void initMqttClient() throws Exception {
-        MqttClient mqttClient = new MqttClient(getHost(config), config.getClientId(), new MemoryPersistence());
-        mqttClient.setCallback(mqttMassageDispatcher);
-        this.mqttClient = mqttClient;
+        this.mqttClient = new MqttClient(getHost(config), config.getClientId(), new MemoryPersistence());
     }
 
     private String getHost(MqttProperties config) {
         return "tcp://" + config.getDomain() + ":" + config.getPort();
     }
 
-    protected void connectionMqttBroker(MqttConnectOptions options) throws MqttException {
+    protected void connectionMqttBroker(MqttConnectOptions options, MqttCallback mqttMassageDispatcher) throws MqttException {
+        mqttClient.setCallback(mqttMassageDispatcher);
         mqttClient.connect(options);
     }
 }
