@@ -44,18 +44,14 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
 
     @Override
     public void connectionLost(Throwable t) {
-        if (log.isErrorEnabled()) {
-            log.error("Mqtt client disconnected: {}", t.getMessage(), t);
-        }
+        log.error("==> Mqtt client disconnected: {}", t.getMessage(), t);
         try {
             for (InvokeMethodMap invokeMethodMap : mqttEventMethodMap.getDisconnectEvent()) {
                 invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass(), t);
             }
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Call disconnect event error when mqtt client disconnects: {}",
-                        e.getMessage(), e);
-            }
+            log.error("==> Call disconnect event error when mqtt client disconnects: {}",
+                    e.getMessage(), e);
         }
 
     }
@@ -65,9 +61,9 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
     public void connectComplete(boolean reconnect, String serverURI) {
         if (log.isInfoEnabled()) {
             if (reconnect) {
-                log.info("The mqtt client has been reconnected to mqtt broker, serverURI: {}", serverURI);
+                log.info("==> The mqtt client has been reconnected to mqtt broker, serverURI: {}", serverURI);
             } else {
-                log.info("The mqtt client is connected to the mqtt broker, serverURI: {}", serverURI);
+                log.info("==> The mqtt client is connected to the mqtt broker, serverURI: {}", serverURI);
             }
         }
 
@@ -76,35 +72,29 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
                 invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass());
             }
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Call connect complete event error when mqtt client connect complete: {}",
-                        e.getMessage(), e);
-            }
+            log.error("==> Call connect complete event error when mqtt client connect complete: {}",
+                    e.getMessage(), e);
         }
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) {
         if (log.isInfoEnabled()) {
-            log.info("Receive a message.【topic: {}】【message: {}】【detail: {}】",
+            log.info("==> Receive a message.【topic: {}】【message: {}】【detail: {}】",
                     topic, new String(mqttMessage.getPayload()), gson.toJson(mqttMessage));
         }
 
         InvokeMethodMap invokeMethodMap = mqttMsgHandleMap.get(topic);
         if (invokeMethodMap == null) {
-            if (log.isErrorEnabled()) {
-                log.error("No found MqttMassageMapping.【topic:{}】", topic);
-            }
+            log.error("==> No found MqttMassageMapping.【topic:{}】", topic);
             return;
         }
         Object[] args = getInvokeArgs(invokeMethodMap, topic, mqttMessage);
         try {
             invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass(), args);
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Call message arrived event error when mqtt message arrived: {}",
-                        e.getMessage(), e);
-            }
+            log.error("==> Call message arrived event error when mqtt message arrived: {}",
+                    e.getMessage(), e);
         }
     }
 
@@ -131,10 +121,8 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
 
                 String topic = getTopic(rootMapping, methodMapping);
                 if (mqttMsgHandleMap.containsKey(topic)) {
-                    if (log.isErrorEnabled()) {
-                        log.error("Duplicate keys in MqttMassageMapping.【signature :{}{}()】",
-                                handleClass.getName(), methods[i].getName());
-                    }
+                    log.error("==> Duplicate keys in MqttMassageMapping.【signature :{}{}()】",
+                            handleClass.getName(), methods[i].getName());
                     System.exit(1);
                 }
 

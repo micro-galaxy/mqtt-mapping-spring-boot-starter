@@ -1,7 +1,6 @@
 package github.microgalaxy.mqtt;
 
 import github.microgalaxy.mqtt.properties.MqttProperties;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,7 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 
 /**
  * @author Microgalaxy
@@ -62,9 +59,7 @@ class MqttTemplateAutoConfiguration {
         try {
             mqttTemplate.initMqttClient();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Create mqtt client failed: {}", e.getMessage(), e);
-            }
+            log.error("==> Create mqtt client failed: {}", e.getMessage(), e);
             System.exit(1);
         }
         return mqttTemplate;
@@ -72,20 +67,15 @@ class MqttTemplateAutoConfiguration {
 
     @EventListener(ApplicationStartedEvent.class)
     public void connectionMqttBroker() {
-        if (log.isInfoEnabled()) {
-            log.info("Connecting to mqtt broker ...【host: {}】【clientId: {}】【username: {}】",
-                    "tcp://" + config.getDomain() + ":" + config.getPort(), config.getClientId(), config.getUsername());
-        }
+        log.info("==> Connecting to mqtt broker ...【host: {}】【clientId: {}】【username: {}】",
+                "tcp://" + config.getDomain() + ":" + config.getPort(), config.getClientId(), config.getUsername());
 
-        MqttConnectOptions options = config.getApplicationContext().getBean(MqttConnectOptions.class);
-        MqttTemplate mqttTemplate = config.getApplicationContext().getBean(MqttTemplate.class);
+        MqttConnectOptions options = mqttConnectOptions();
+        MqttTemplate mqttTemplate = mqttTemplate();
         try {
             mqttTemplate.connectionMqttBroker(options, dispatcher);
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Connection to mqtt broker failed: {}", e.getMessage(), e);
-            }
-//            System.exit(1);
+            log.error("==> Connection to mqtt broker failed: {}", e.getMessage(), e);
         }
     }
 }

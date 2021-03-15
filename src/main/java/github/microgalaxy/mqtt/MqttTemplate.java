@@ -50,10 +50,8 @@ public final class MqttTemplate {
             }
             return true;
         } catch (MqttException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Failed to publish a message: {}【topic: {}】【qos: {}】【msg: {}】",
-                        e.getMessage(), topic, qos.qos(), msg, e);
-            }
+            log.error("==> Failed to publish a message: {}【topic: {}】【qos: {}】【msg: {}】",
+                    e.getMessage(), topic, qos.qos(), msg, e);
         }
         return false;
     }
@@ -81,14 +79,12 @@ public final class MqttTemplate {
             MqttDeliveryToken token = mqttTopic.publish(mqttMessage);
             token.waitForCompletion();
             if (log.isInfoEnabled()) {
-                log.info("Published a message.【topic: {}】【data: {}】", topic, payload);
+                log.info("==> Published a message.【topic: {}】【data: {}】", topic, payload);
             }
             return true;
         } catch (MqttException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Failed to publish a message: {}【topic: {}】【qos: {}】【data: {}】",
-                        e.getMessage(), topic, qos.qos(), payload, e);
-            }
+            log.error("==> Failed to publish a message: {}【topic: {}】【qos: {}】【data: {}】",
+                    e.getMessage(), topic, qos.qos(), payload, e);
         }
         return false;
     }
@@ -109,10 +105,8 @@ public final class MqttTemplate {
             mqttClient.subscribe(topic, qos.qos());
             return true;
         } catch (MqttException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Failed to subscribe to a topic from mqtt broker: {}【topic：{}】【qos：{}】",
-                        e.getMessage(), topic, qos.qos(), e);
-            }
+            log.error("==> Failed to subscribe to a topic from mqtt broker: {}【topic：{}】【qos：{}】",
+                    e.getMessage(), topic, qos.qos(), e);
         }
         return false;
     }
@@ -129,10 +123,8 @@ public final class MqttTemplate {
             mqttClient.subscribe(topics, qos);
             return true;
         } catch (MqttException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Failed to subscribe to a topic from mqtt broker: {}【topic：{}】【qos：{}】",
-                        e.getMessage(), topics, qos, e);
-            }
+            log.error("==> Failed to subscribe to a topic from mqtt broker: {}【topic：{}】【qos：{}】",
+                    e.getMessage(), topics, qos, e);
         }
         return false;
     }
