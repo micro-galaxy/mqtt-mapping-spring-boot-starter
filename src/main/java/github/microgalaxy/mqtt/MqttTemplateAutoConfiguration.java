@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,7 +65,7 @@ class MqttTemplateAutoConfiguration {
         return mqttTemplate;
     }
 
-    @EventListener(ApplicationStartedEvent.class)
+    @EventListener(ApplicationReadyEvent.class)
     public void connectionMqttBroker() {
         log.info("==> Connecting to mqtt broker ...【host: {}】【clientId: {}】【username: {}】",
                 "tcp://" + config.getDomain() + ":" + config.getPort(), config.getClientId(), config.getUsername());

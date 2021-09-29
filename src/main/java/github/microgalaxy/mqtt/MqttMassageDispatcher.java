@@ -12,6 +12,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,9 +93,9 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
         Object[] args = getInvokeArgs(invokeMethodMap, topic, mqttMessage);
         try {
             invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass(), args);
-        } catch (Exception e) {
+        } catch (InvocationTargetException | IllegalAccessException ie) {
             log.error("==> Call message arrived event error when mqtt message arrived: {}",
-                    e.getMessage(), e);
+                    ie.getMessage(), ie);
         }
     }
 
