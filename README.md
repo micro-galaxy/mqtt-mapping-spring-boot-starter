@@ -16,7 +16,8 @@ make mqtt message processing as simple as spring processing http request mapping
 ````
 spring:
  mqtt:
-  host: tcp://localhost:1020
+  domain: localhost
+  port: 1020
   clientId: SERVER000000000000001
   username: admin
   password: admin
