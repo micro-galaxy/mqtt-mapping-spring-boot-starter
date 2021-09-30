@@ -50,7 +50,7 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
             for (InvokeMethodMap invokeMethodMap : mqttEventMethodMap.getDisconnectEvent()) {
                 invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass(), t);
             }
-        } catch (Exception e) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
             log.error("==> Call disconnect event error when mqtt client disconnects: {}",
                     e.getMessage(), e);
         }
@@ -72,7 +72,7 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
             for (InvokeMethodMap invokeMethodMap : mqttEventMethodMap.getConnectCompleteEvent()) {
                 invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass());
             }
-        } catch (Exception e) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
             log.error("==> Call connect complete event error when mqtt client connect complete: {}",
                     e.getMessage(), e);
         }
@@ -93,9 +93,9 @@ class MqttMassageDispatcher implements MqttCallbackExtended {
         Object[] args = getInvokeArgs(invokeMethodMap, topic, mqttMessage);
         try {
             invokeMethodMap.getMethod().invoke(invokeMethodMap.getTargetClass(), args);
-        } catch (InvocationTargetException | IllegalAccessException ie) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
             log.error("==> Call message arrived event error when mqtt message arrived: {}",
-                    ie.getMessage(), ie);
+                    e.getMessage(), e);
         }
     }
 
